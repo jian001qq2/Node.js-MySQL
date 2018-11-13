@@ -9,10 +9,10 @@ var connection = mysql.createConnection({
   host: "localhost",
   // Your port; if not 3306
   port: 3306,
-  // Your username
-  user: "root",
-  // Your password
-  password: "root",
+  // Your own username
+  user: "",
+  // Your own password
+  password: "",
   database: "bamazon_db"
 });
 connection.connect(function(err) {
@@ -66,16 +66,16 @@ function shopping(){
 
 }
 function quantityCheck(idInput,quantityInput){
-  //connect the database to check the quantity of chosen item 
+  //connect the database to check the quantity of chosen item with the input id 
   connection.query('SELECT stock_quantity, price FROM products WHERE item_id=?',[idInput], function(err, result){
     if (err) {
-      console.log('the error in quantitycheck is: '+err);
+      console.log('the error in quantityCheck is: '+err);
     };
     if (quantityInput<= result[0].stock_quantity){
       enoughStock(idInput,quantityInput,result[0].stock_quantity,result[0].price)
     } else {
       console.log("\n Sorry Insufficient quantity! Return the product list\n")
-      //may consider add a conformation to ask user to return to the list
+      //may consider add a conformation to ask user to return to the list or exist
       showProduct()
     }
   })//close of the stock query
@@ -90,29 +90,3 @@ function enoughStock(idInput,inputQuantity,stock,price){
     // If got time try to make a comfirmation function to ask user to make another shopping or exist
   })
 }
-/**pseudocode  #1 key break down step by step by create multiple functions to help 
- 1. Create a MySQL Database called `bamazon`.
-
-2. Then create a Table inside of that database called `products`.
-
-3. The products table should have each of the following columns:
-
-   * item_id (unique id for each product)
-
-   * product_name, department_name, price, stock_quantity 
-
-4. Populate this database with around 10 different products. 
-5. create a Node application called `bamazonCustomer.js`. 
- * Running this application will display all of the items available for sale with the ids, names, and prices of products for sale.
-
-6. The app should then prompt users with two messages.
-   * The first should ask them the ID of the product they would like to buy.
-   * The second message should ask how many units of the product they would like to buy.
-
-7. Once the customer has placed the order,check the product's quantity.
-
-   * If not, the app should log a phrase like `Insufficient quantity!`, and then prevent the order from going through.
-   * if yes updating the SQL database to reflect the remaining quantity.Once the update goes through, show the customer the total cost of their purchase.
-- - -
- * 
- */
